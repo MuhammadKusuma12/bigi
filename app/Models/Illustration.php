@@ -8,6 +8,7 @@ class Illustration extends Model
 {
     protected $fillable = [
         'title',
+        'image',
         'caption',
     ];
 

@@ -5,10 +5,12 @@
     const illpost = useForm({
         title: null,
         caption: null,
+        image: null,    
     });
 
     const upload = () => {
-        illpost.post(route('illustration.store'));
+        alert(illpost.image);
+        illpost.post(route('illustration.store'), {preserveState:true,});
     };
 </script>
 
@@ -25,10 +27,10 @@
                     <input v-model="illpost.title" type="text" name="title" id="title" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <small>{{ illpost.errors.title }}</small>
                 </div>
-                <!-- <div>
-                    <label for="illustration" class="text-white mr-5">Illustration</label>
-                    <input type="file" name="illustration" id="illustration" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div> -->
+                <div>
+                    <label for="image" class="text-white mr-5">Illustration</label>
+                    <input v-on:change="illpost.image" type="file" @input="illpost.image = $event.target.files[0]" name="image" id="image" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
                 <div>
                     <label for="caption" class="text-white mr-5">Caption</label>
                     <textarea v-model="illpost.caption" name="caption" id="caption"></textarea>

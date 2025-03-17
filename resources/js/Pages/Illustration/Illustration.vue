@@ -23,7 +23,7 @@
                                 {{ illustration.title }}
                             </p>
                             <p>
-                                <img src="https://picsum.photos/400" alt="image missing">
+                                <img :src="'/storage/'+illustration.image" alt="image missing">
                                 Caption: {{ illustration.caption }}
                             </p>
                         </li>

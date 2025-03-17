@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Illustration;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Intervention\Image\Laravel\Facades\Image;
 
 class IllustrationController extends Controller
 {
@@ -33,8 +34,17 @@ class IllustrationController extends Controller
         $validated = $request->validate([
             'title' => ['required','string'],
             'caption' => ['string'],
+            'image' => ['required', 'image'],
         ]);
         
+        $img_path = request('image')->store('illustrations', 'public');
+
+        $image = Image::read(public_path("storage/$img_path"));
+        $image->scale(400, 400);
+        $image->save();
+
+        $validated['image'] = $img_path;
+
         auth()->user()->illustrations()->create($validated);
         
         return redirect(route('illustration.index'));
