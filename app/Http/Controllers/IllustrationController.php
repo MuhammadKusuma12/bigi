@@ -6,6 +6,7 @@ use App\Models\Illustration;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Validator;
 
 class IllustrationController extends Controller
 {
@@ -14,7 +15,7 @@ class IllustrationController extends Controller
      */
     public function index()
     {
-        $illustrations = Illustration::all();
+        $illustrations = Illustration::with('arts')->get();
         return Inertia::render('Illustration/Illustration', ['illustrations'=>$illustrations]);
     }
 
@@ -34,19 +35,36 @@ class IllustrationController extends Controller
         $validated = $request->validate([
             'title' => ['required','string'],
             'caption' => ['string'],
-            'image' => ['required', 'image'],
         ]);
         
-        $img_path = request('image')->store('illustrations', 'public');
+        $illustration = auth()->user()->illustrations()->create($validated);
 
-        $image = Image::read(public_path("storage/$img_path"));
-        $image->scale(400, 400);
-        $image->save();
+        $img_count = count(request('image'));
+        $valcon = [];
 
-        $validated['image'] = $img_path;
-
-        auth()->user()->illustrations()->create($validated);
+        // Create an array containing validator condition
+        for($i=0; $i<$img_count; $i++)
+        {$valcon[$i] = ['required', 'image'];}
         
+        // Validate the image one by one, each matching the previously established array of condition
+        $img_validator = Validator::make(request('image'), $valcon);
+        if($img_validator->fails()){
+            return redirect(route('illustration.create'))->withErrors($img_validator);
+            //with errors later
+        }
+        
+        // Store the images
+        for($i=0; $i<$img_count; $i++)
+        {
+            $img_path = request('image')[$i]->store('arts', 'public');
+
+            $image = Image::read(public_path("storage/$img_path"));
+            $image->scale(400, 400);
+            $image->save();
+
+            $illustration->arts()->create(['image'=>$img_path]);
+        }
+
         return redirect(route('illustration.index'));
     }
 

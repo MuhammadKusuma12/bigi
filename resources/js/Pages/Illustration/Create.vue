@@ -9,6 +9,7 @@
     });
 
     const upload = () => {
+        //console.log(illpost.errors.image);
         alert(illpost.image);
         illpost.post(route('illustration.store'), {preserveState:true,});
     };
@@ -29,7 +30,8 @@
                 </div>
                 <div>
                     <label for="image" class="text-white mr-5">Illustration</label>
-                    <input v-on:change="illpost.image" type="file" @input="illpost.image = $event.target.files[0]" name="image" id="image" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input multiple v-on:change="illpost.image" type="file" @input="illpost.image = $event.target.files" name="image" id="image" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <small>{{ console.log(illpost.errors) }}</small>
                 </div>
                 <div>
                     <label for="caption" class="text-white mr-5">Caption</label>

@@ -8,12 +8,16 @@ class Illustration extends Model
 {
     protected $fillable = [
         'title',
-        'image',
         'caption',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function arts()
+    {
+        return $this->hasMany(Art::class);
     }
 }

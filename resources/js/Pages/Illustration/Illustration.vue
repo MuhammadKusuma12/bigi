@@ -1,9 +1,10 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head,Link } from '@inertiajs/vue3';
-    defineProps({
+    const props = defineProps({
         illustrations : Array
     });
+    console.log(props.illustrations);
 </script>
 
 <template>
@@ -12,9 +13,9 @@
     </Head>
     <AuthenticatedLayout>
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="lg:px-8 max-w-7xl mx-auto sm:px-6">
                 <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
+                    class="bg-white shadow-sm dark:bg-gray-800 overflow-hidden sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         Look at these badass illustrations:
@@ -23,7 +24,10 @@
                                 {{ illustration.title }}
                             </p>
                             <p>
-                                <img :src="'/storage/'+illustration.image" alt="image missing">
+                                <!-- Relationship has to be eager loaded, its more efficient -->
+                                <li v-for="art in illustration.arts">
+                                    <img :src="'/storage/'+art.image" alt="image missing"> 
+                                </li>
                                 Caption: {{ illustration.caption }}
                             </p>
                         </li>
